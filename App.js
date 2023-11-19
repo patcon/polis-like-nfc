@@ -17,7 +17,7 @@ import useAppendState from './hooks/useAppendState';
 const RE_CONVO_ID = /^\d[a-z\d]+$/;
 const RE_API_KEY= /^pkey_[a-zA-Z\d]+$/;
 
-import NfcManager, { NfcTech } from 'react-native-nfc-manager';
+import NfcManager, { NfcTech, NfcEvents } from 'react-native-nfc-manager';
 
 //NfcManager.start();
 
@@ -37,11 +37,12 @@ export default function App() {
   const [convoId, setConvoId] = useState('');
   const [apiKey, setApiKey] = useState('');
   const [errors, setErrors] = useState({});
+  const [hasNfc, setHasNFC ] = useState(null);
 
   async function readNfc() {
     try {
       // register for the NFC tag with NDEF in it
-      await NfcManager.requestTechnology(NfcTech.NfcA);
+      await NfcManager.requestTechnology(NfcTech.Ndef);
       // the resolved tag object will contain `ndefMessage` property
       const tag = await NfcManager.getTag();
       console.warn('Tag found', tag.id);
@@ -51,6 +52,10 @@ export default function App() {
       // stop the nfc scanning
       NfcManager.cancelTechnologyRequest();
     }
+  }
+
+  const readAnyTag = async () => {
+    await NfcManager.registerTagEvent();
   }
 
   const enableNfcFirst = () => {
@@ -89,24 +94,44 @@ export default function App() {
     });
   };
 
-  useEffect(() => {
-    let interval;
-    if (isListening) {
-      const registerVote = () => {
-        const mockUid = generateRandom();
-        appendLog(`Registered vote by user ${mockUid} for ${voteType}`);
-        voteActiveStatement({ apiKey, voteType, convoId, userId: mockUid });
-      }
-      interval = setInterval(registerVote, 1000);
-    }
+  // useEffect(() => {
+  //   const checkIsSupported = async () => {
+  //     const deviceIsSupported = await NfcManager.isSupported()
 
-    return () => clearInterval(interval);
+  //     setHasNFC(deviceIsSupported)
+  //     if (deviceIsSupported) {
+  //       await NfcManager.start()
+  //     }
+  //   }
+
+  //   checkIsSupported()
+  // }, [])
+  useEffect(() => {
+    NfcManager.setEventListener(NfcEvents.DiscoverTag, (tag) => {
+        const userId = tag.id;
+        console.warn(`Registered vote by user ${userId} for ${voteType}`);
+        appendLog(`Registered vote by user ${userId} for ${voteType}`);
+        voteActiveStatement({ apiKey, voteType, convoId, userId });
+    })
+
+    return () => {
+      // NfcManager.setEventListener(NfcEvents.DiscoverTag, null);
+    }
+  }, [isListening, apiKey, voteType, convoId, appendLog])
+
+  useEffect(() => {
+    if (isListening) {
+      readAnyTag();
+    };
+
+    return () => {
+      NfcManager.unregisterTagEvent();
+    };
   }, [isListening, apiKey, voteType, convoId, appendLog]);
 
   const toggleListening = () => {
     enableNfcFirst();
     if (!validateForm()) return
-    readNfc();
     setIsListening(previousState => !previousState);
   }
 
