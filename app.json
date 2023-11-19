@@ -22,10 +22,18 @@
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
+      "permissions": [
+        "android.permission.NFC"
+      ],
       "package": "com.anonymous.snack81f0424761d94cc9b0e467c1a4f261e0"
     },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "50bbdcbf-cad3-4fbf-b46a-8d6fee503e5e"
+      }
     }
   }
 }
