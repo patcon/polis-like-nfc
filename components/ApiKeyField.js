@@ -11,6 +11,8 @@ const Component = ({ disabled, value, onValueChange, error }) => {
         mode="outlined"
         value={value}
         onChangeText={onValueChange}
+        autoCapitalize="none"
+        autoCorrect={false}
       />
       <HelperText type="error" visible={error} style={{minHeight: 28, marginBottom: -24}}>{error}</HelperText>
     </View>
