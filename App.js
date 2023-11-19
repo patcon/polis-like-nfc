@@ -93,12 +93,9 @@ export default function App() {
   const toggleListening = () => {
     enableNfcFirst();
     if (!validateForm()) return
-    setTimeout(() => {
-      registerVote();
-    }, 1000);
     setIsListening(previousState => !previousState);
   }
-  
+
   return (
     <SafeAreaView style={styles.container}>
       <ApiKeyField disabled={isListening} value={apiKey} onValueChange={setApiKey} error={errors.apiKey} />
@@ -116,7 +113,7 @@ const styles = StyleSheet.create({
     flex: 1,
     gap: 24,
     paddingTop: 24,
-    justifyContent: 'start',
+    justifyContent: 'flex-start',
     backgroundColor: '#ecf0f1',
   },
 });
