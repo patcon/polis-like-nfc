@@ -17,10 +17,9 @@ import useAppendState from './hooks/useAppendState';
 const RE_CONVO_ID = /^\d[a-z\d]+$/;
 const RE_API_KEY= /^pkey_[a-zA-Z\d]+$/;
 
-import NfcManager from 'react-native-nfc-manager';
+import NfcManager, { NfcTech } from 'react-native-nfc-manager';
 
-// NfcManager.start();
-//requestNfcPermission();
+//NfcManager.start();
 
 function generateRandom(maxLimit = 100){
   let rand = Math.random() * maxLimit;
@@ -39,9 +38,24 @@ export default function App() {
   const [apiKey, setApiKey] = useState('');
   const [errors, setErrors] = useState({});
 
+  async function readNfc() {
+    try {
+      // register for the NFC tag with NDEF in it
+      await NfcManager.requestTechnology(NfcTech.NfcA);
+      // the resolved tag object will contain `ndefMessage` property
+      const tag = await NfcManager.getTag();
+      console.warn('Tag found', tag.id);
+    } catch (ex) {
+      console.warn('Oops!', ex);
+    } finally {
+      // stop the nfc scanning
+      NfcManager.cancelTechnologyRequest();
+    }
+  }
+
   const enableNfcFirst = () => {
     if (!nfcEnabled) {
-      //NfcManager.start();
+      NfcManager.start();
       setNfcEnabled(true);
     }
   }
@@ -78,7 +92,6 @@ export default function App() {
   useEffect(() => {
     let interval;
     if (isListening) {
-      //validateForm();
       const registerVote = () => {
         const mockUid = generateRandom();
         appendLog(`Registered vote by user ${mockUid} for ${voteType}`);
@@ -93,6 +106,7 @@ export default function App() {
   const toggleListening = () => {
     enableNfcFirst();
     if (!validateForm()) return
+    readNfc();
     setIsListening(previousState => !previousState);
   }
 
