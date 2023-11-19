@@ -19,7 +19,7 @@ const RE_API_KEY= /^pkey_[a-zA-Z\d]+$/;
 
 import NfcManager from 'react-native-nfc-manager';
 
-NfcManager.start();
+// NfcManager.start();
 //requestNfcPermission();
 
 function generateRandom(maxLimit = 100){
@@ -41,7 +41,7 @@ export default function App() {
 
   const enableNfcFirst = () => {
     if (!nfcEnabled) {
-      NfcManager.start();
+      //NfcManager.start();
       setNfcEnabled(true);
     }
   }
