@@ -1,0 +1,31 @@
+{
+  "expo": {
+    "name": "starter-polis-like-nfc",
+    "slug": "snack-81f04247-61d9-4cc9-b0e4-67c1a4f261e0",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "light",
+    "splash": {
+      "image": "./assets/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
+    },
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "ios": {
+      "supportsTablet": true
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#ffffff"
+      },
+      "package": "com.anonymous.snack81f0424761d94cc9b0e467c1a4f261e0"
+    },
+    "web": {
+      "favicon": "./assets/favicon.png"
+    }
+  }
+}
