@@ -120,12 +120,27 @@ export default function App() {
   }, [isListening, apiKey, voteType, convoId, appendLog])
 
   useEffect(() => {
+    const debug = false;
+    let interval;
     if (isListening) {
-      readAnyTag();
+      if (debug) {
+        const registerVote = () => {
+          const mockUid = generateRandom();
+          appendLog(`Registered vote by user ${mockUid} for ${voteType}`);
+          voteActiveStatement({ apiKey, voteType, convoId, userId: mockUid });
+        }
+        interval = setInterval(registerVote, 1000);
+      } else {
+        readAnyTag();
+      }
     };
 
     return () => {
-      NfcManager.unregisterTagEvent();
+      if (debug) {
+        clearInterval(interval);
+      } else {
+        NfcManager.unregisterTagEvent();
+      }
     };
   }, [isListening, apiKey, voteType, convoId, appendLog]);
 
