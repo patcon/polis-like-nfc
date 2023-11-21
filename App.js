@@ -82,23 +82,33 @@ export default function App() {
 
   const MOCK_ACTIVE_STATEMENT = 26;
 
+  const fetchUser = (seed) => {
+    return fetch('https://randomuser.me/api/1.3?seed=' + seed)
+      .then(res => res.json()).then(data => data.results[0])
+  }
+
   const voteActiveStatement = ({ convoId, apiKey, voteType, userId }) => {
-    return fetch(`${API_BASE_URL}/votes`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'User-Agent': 'foo',
-      },
-      body: JSON.stringify({
-        vote: VOTE_TYPES[voteType],
-        tid: MOCK_ACTIVE_STATEMENT,
-        pid: 'mypid',
-        conversation_id: convoId,
-        agid: 1,
-        xid: userId,
-        x_profile_image_url: `https://robohash.org/${userId}.png?set=set4`,
-      }),
-    }).then(res => res.json()).then(data => console.log(data));
+    fetchUser(userId)
+      .then(user => {
+        const fullName = `${user.name.first} ${user.name.last}`;
+        return fetch(`${API_BASE_URL}/votes`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'User-Agent': 'foo',
+          },
+          body: JSON.stringify({
+            vote: VOTE_TYPES[voteType],
+            tid: MOCK_ACTIVE_STATEMENT,
+            pid: 'mypid',
+            conversation_id: convoId,
+            agid: 1,
+            xid: userId,
+            x_name: fullName,
+            x_profile_image_url: user.picture.thumbnail,
+          }),
+        }).then(res => res.json()).then(data => console.log(data));
+      })
   };
 
   // useEffect(() => {
