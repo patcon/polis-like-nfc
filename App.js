@@ -15,7 +15,8 @@ import LogDisplay from './components/LogDisplay';
 import useAppendState from './hooks/useAppendState';
 
 const RE_CONVO_ID = /^\d[a-z\d]+$/;
-const RE_API_KEY= /^pkey_[a-zA-Z\d]+$/;
+const RE_API_KEY = /^pkey_[a-zA-Z\d]+$/;
+const VOTE_TYPES = {agree: 1, pass: 0, disagree: -1}
 
 import NfcManager, { NfcTech, NfcEvents } from 'react-native-nfc-manager';
 
@@ -76,22 +77,28 @@ export default function App() {
   }
 
   // Inspect at https://public.requestbin.com/r/en4iffj008bnd
-  const API_BASE_URL = 'https://en4iffj008bnd.x.pipedream.net/api';
+  // const API_BASE_URL = 'https://en4iffj008bnd.x.pipedream.net/api/v3';
+  const API_BASE_URL = 'https://pol.is/api/v3';
+
+  const MOCK_ACTIVE_STATEMENT = 26;
 
   const voteActiveStatement = ({ convoId, apiKey, voteType, userId }) => {
-    return fetch(`${API_BASE_URL}/conversations/${convoId}/votes`, {
+    return fetch(`${API_BASE_URL}/votes`, {
       method: 'POST',
       headers: {
-        Accept: 'application/json',
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${apiKey}`,
+        'User-Agent': 'foo',
       },
       body: JSON.stringify({
-        statementId: false,
-        voteType,
-        userId,
+        vote: VOTE_TYPES[voteType],
+        tid: MOCK_ACTIVE_STATEMENT,
+        pid: 'mypid',
+        conversation_id: convoId,
+        agid: 1,
+        xid: userId,
+        x_profile_image_url: `https://robohash.org/${userId}.png?set=set4`,
       }),
-    });
+    }).then(res => res.json()).then(data => console.log(data));
   };
 
   // useEffect(() => {
