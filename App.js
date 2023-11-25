@@ -218,7 +218,7 @@ export default function App() {
       <InputField label="Statement ID" value={statementId} onValueChange={handleStatementIdOnChange} />
       <TypeSelector disabled={isListening} value={voteType} onValueChange={setVoteType} />
       <ToggleListenButton onClick={toggleListening} {...{isListening}} />
-      <Text>{connectionStatus}</Text>
+      <Text>Websocket Connection: {connectionStatus}</Text>
       <Text>Logs:</Text>
       <LogDisplay logs={logs} />
     </SafeAreaView>
