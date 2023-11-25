@@ -101,8 +101,8 @@ export default function App() {
   }
 
   // Inspect at https://public.requestbin.com/r/en4iffj008bnd
-  // const API_BASE_URL = 'https://en4iffj008bnd.x.pipedream.net/api/v3';
-  const API_BASE_URL = 'https://pol.is/api/v3';
+  const API_BASE_URL = 'https://en4iffj008bnd.x.pipedream.net/api/v3';
+  // const API_BASE_URL = 'https://pol.is/api/v3';
 
   const fetchUser = (seed) => {
     return fetch('https://randomuser.me/api/1.3?seed=' + seed)
