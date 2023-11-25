@@ -16,7 +16,7 @@ import LogDisplay from './components/LogDisplay';
 import useAppendState from './hooks/useAppendState';
 
 const RE_CONVO_ID = /^\d[a-z\d]+$/;
-const RE_API_KEY = /^pkey_[a-zA-Z\d]+$/;
+// const RE_API_KEY = /^pkey_[a-zA-Z\d]+$/;
 const VOTE_TYPES = {agree: 1, pass: 0, disagree: -1}
 
 // Set up partykit websocket urls.
@@ -93,7 +93,7 @@ export default function App() {
   const validateForm = () => {
     const errors = {};
 
-    if (!apiKey.match(RE_API_KEY)) errors.apiKey = 'API Key is malformed';
+    // if (!apiKey.match(RE_API_KEY)) errors.apiKey = 'API Key is malformed';
     if (!convoId.match(RE_CONVO_ID)) errors.convoId = 'Conversation ID is malformed';
     setErrors(errors);
 
@@ -213,7 +213,6 @@ export default function App() {
 
   return (
     <SafeAreaView style={styles.container}>
-      <InputField label="API Key" disabled={isListening} value={apiKey} onValueChange={setApiKey} error={errors.apiKey} />
       <InputField label="Conversation ID" disabled={isListening} value={convoId} onValueChange={setConvoId} error={errors.convoId} />
       <InputField label="Statement ID" value={statementId} onValueChange={handleStatementIdOnChange} />
       <TypeSelector disabled={isListening} value={voteType} onValueChange={setVoteType} />
