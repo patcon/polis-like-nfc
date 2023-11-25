@@ -5,6 +5,7 @@ import {
   SafeAreaView,
   StyleSheet,
 } from 'react-native';
+import * as partykitData from './partykit.json';
 
 // You can import supported modules from npm
 import InputField from './components/InputField';
@@ -18,9 +19,13 @@ const RE_CONVO_ID = /^\d[a-z\d]+$/;
 const RE_API_KEY = /^pkey_[a-zA-Z\d]+$/;
 const VOTE_TYPES = {agree: 1, pass: 0, disagree: -1}
 
-// TODO: make this configurable between dev and prod.
+// Set up partykit websocket urls.
+const devSocketUrl = 'ws://127.0.0.1:1999';
+const partkitUsername = 'patcon';
+const prodSocketUrl = `wss://${partykitData.name}.${partkitUsername}.partykit.dev`;
 // TODO: select party based on convoId
-const WEBSOCKET_URL = 'ws://127.0.0.1:1999/party/main'
+const partykitParty = 'main';
+const WEBSOCKET_URL = `${ __DEV__ ? devSocketUrl : prodSocketUrl }/party/${partykitParty}`
 
 import NfcManager, { NfcTech, NfcEvents } from 'react-native-nfc-manager';
 

@@ -2,7 +2,9 @@
   "scripts": {
     "start": "EXPO_NO_TYPESCRIPT_SETUP=true expo start --dev-client",
     "start-server": "partykit dev",
+    "deploy-server": "partykit deploy",
     "android": "expo run:android",
+    "android:prod": "expo run:android --variant release",
     "ios": "expo run:ios",
     "web": "expo start --web"
   },
