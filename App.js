@@ -7,8 +7,7 @@ import {
 } from 'react-native';
 
 // You can import supported modules from npm
-import ApiKeyField from './components/ApiKeyField';
-import ConvoIdField from './components/ConvoIdField';
+import InputField from './components/InputField';
 import TypeSelector from './components/TypeSelector';
 import ToggleListenButton from './components/ToggleListenButton';
 import LogDisplay from './components/LogDisplay';
@@ -38,11 +37,13 @@ export default function App() {
   const [logs, appendLog] = useAppendState();
   const [voteType, setVoteType] = useState('agree');
   const [convoId, setConvoId] = useState('');
+  const [statementId, setStatementId] = useState(null);
   const [apiKey, setApiKey] = useState('');
   const [errors, setErrors] = useState({});
   const [hasNfc, setHasNFC ] = useState(null);
 
   const { sendMessage, lastMessage, readyState } = useWebSocket(WEBSOCKET_URL, {
+    // TODO: Doesn't seem to reconnect when the server goes away and comes back.
     shouldReconnect: (closeEvent) => true,
   });
 
@@ -183,8 +184,8 @@ export default function App() {
 
   return (
     <SafeAreaView style={styles.container}>
-      <ApiKeyField disabled={isListening} value={apiKey} onValueChange={setApiKey} error={errors.apiKey} />
-      <ConvoIdField disabled={isListening} value={convoId} onValueChange={setConvoId} error={errors.convoId} />
+      <InputField label="API Key" disabled={isListening} value={apiKey} onValueChange={setApiKey} error={errors.apiKey} />
+      <InputField label="Conversation ID" disabled={isListening} value={convoId} onValueChange={setConvoId} error={errors.convoId} />
       <TypeSelector disabled={isListening} value={voteType} onValueChange={setVoteType} />
       <ToggleListenButton onClick={toggleListening} {...{isListening}} />
       <Text>{connectionStatus}</Text>

@@ -2,12 +2,12 @@ import * as React from 'react';
 import { View } from 'react-native';
 import { HelperText, TextInput } from 'react-native-paper';
 
-const Component = ({ disabled, value, onValueChange, error }) => {
+const Component = ({ label, disabled, value, onValueChange, error }) => {
   return (
     <View>
       <TextInput
         disabled={disabled}
-        label="API Key"
+        label={label}
         mode="outlined"
         value={value}
         onChangeText={onValueChange}
