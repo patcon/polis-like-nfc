@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import useWebSocket, { ReadyState } from 'react-native-use-websocket';
 import {
   Text,
   SafeAreaView,
@@ -17,6 +18,7 @@ import useAppendState from './hooks/useAppendState';
 const RE_CONVO_ID = /^\d[a-z\d]+$/;
 const RE_API_KEY = /^pkey_[a-zA-Z\d]+$/;
 const VOTE_TYPES = {agree: 1, pass: 0, disagree: -1}
+const WEBSOCKET_URL = 'ws://127.0.0.1:1999/party/main'
 
 import NfcManager, { NfcTech, NfcEvents } from 'react-native-nfc-manager';
 
@@ -39,6 +41,18 @@ export default function App() {
   const [apiKey, setApiKey] = useState('');
   const [errors, setErrors] = useState({});
   const [hasNfc, setHasNFC ] = useState(null);
+
+  const { sendMessage, lastMessage, readyState } = useWebSocket(WEBSOCKET_URL, {
+    shouldReconnect: (closeEvent) => true,
+  });
+
+  const connectionStatus = {
+    [ReadyState.CONNECTING]: "Connecting",
+    [ReadyState.OPEN]: "Open",
+    [ReadyState.CLOSING]: "Closing",
+    [ReadyState.CLOSED]: "Closed",
+    [ReadyState.UNINSTANTIATED]: "Uninstantiated",
+  }[readyState];
 
   async function readNfc() {
     try {
@@ -173,6 +187,7 @@ export default function App() {
       <ConvoIdField disabled={isListening} value={convoId} onValueChange={setConvoId} error={errors.convoId} />
       <TypeSelector disabled={isListening} value={voteType} onValueChange={setVoteType} />
       <ToggleListenButton onClick={toggleListening} {...{isListening}} />
+      <Text>{connectionStatus}</Text>
       <Text>Logs:</Text>
       <LogDisplay logs={logs} />
     </SafeAreaView>
