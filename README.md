@@ -36,3 +36,9 @@ npm start
 
 # Flash any NFC-enabled tag (some credit cards word, or door fobs) to test.
 ```
+
+### Production Build
+
+```
+npm run android:prod
+```
