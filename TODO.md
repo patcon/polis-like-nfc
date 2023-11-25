@@ -1,8 +1,10 @@
 - [x] submit real votes to pol.is api via xid
 - [x] generate fake name and profile from NFC id
-- [ ] use active statement from partykit storage
+- [x] share active statement via partykit
   - [ ] add simple CLI command to update active statement
-  - [ ] add UI for updating active statement
+  - [x] add UI for updating active statement
+  - [ ] make websocket url vary based on dev/prod
+  - [ ] confirm that changing statementId during scan changes API request
 - [ ] extract userId from url data when available, and NFC tag id otherwise
   - https://pol.is/2demo?xid=foobar
 - [ ] determine if apiKey still needed, or remove

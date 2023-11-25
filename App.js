@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import useWebSocket, { ReadyState } from 'react-native-use-websocket';
 import {
   Text,
@@ -17,6 +17,9 @@ import useAppendState from './hooks/useAppendState';
 const RE_CONVO_ID = /^\d[a-z\d]+$/;
 const RE_API_KEY = /^pkey_[a-zA-Z\d]+$/;
 const VOTE_TYPES = {agree: 1, pass: 0, disagree: -1}
+
+// TODO: make this configurable between dev and prod.
+// TODO: select party based on convoId
 const WEBSOCKET_URL = 'ws://127.0.0.1:1999/party/main'
 
 import NfcManager, { NfcTech, NfcEvents } from 'react-native-nfc-manager';
@@ -42,9 +45,10 @@ export default function App() {
   const [errors, setErrors] = useState({});
   const [hasNfc, setHasNFC ] = useState(null);
 
-  const { sendMessage, lastMessage, readyState } = useWebSocket(WEBSOCKET_URL, {
-    // TODO: Doesn't seem to reconnect when the server goes away and comes back.
+  const { sendJsonMessage, lastJsonMessage, readyState } = useWebSocket(WEBSOCKET_URL, {
     shouldReconnect: (closeEvent) => true,
+    reconnectAttempts: 20,
+    reconnectInterval: 5000,
   });
 
   const connectionStatus = {
@@ -95,14 +99,13 @@ export default function App() {
   // const API_BASE_URL = 'https://en4iffj008bnd.x.pipedream.net/api/v3';
   const API_BASE_URL = 'https://pol.is/api/v3';
 
-  const MOCK_ACTIVE_STATEMENT = 26;
-
   const fetchUser = (seed) => {
     return fetch('https://randomuser.me/api/1.3?seed=' + seed)
       .then(res => res.json()).then(data => data.results[0])
   }
 
-  const voteActiveStatement = ({ convoId, apiKey, voteType, userId }) => {
+  // TODO: confirm that changing statementId while listening works as expected.
+  const voteActiveStatement = ({ convoId, statementId, apiKey, voteType, userId }) => {
     fetchUser(userId)
       .then(user => {
         const fullName = `${user.name.first} ${user.name.last}`;
@@ -114,7 +117,7 @@ export default function App() {
           },
           body: JSON.stringify({
             vote: VOTE_TYPES[voteType],
-            tid: MOCK_ACTIVE_STATEMENT,
+            tid: statementId,
             pid: 'mypid',
             conversation_id: convoId,
             agid: 1,
@@ -143,13 +146,13 @@ export default function App() {
         const userId = tag.id;
         console.warn(`Registered vote by user ${userId} for ${voteType}`);
         appendLog(`Registered vote by user ${userId} for ${voteType}`);
-        voteActiveStatement({ apiKey, voteType, convoId, userId });
+        voteActiveStatement({ apiKey, statementId, voteType, convoId, userId });
     })
 
     return () => {
       // NfcManager.setEventListener(NfcEvents.DiscoverTag, null);
     }
-  }, [isListening, apiKey, voteType, convoId, appendLog])
+  }, [isListening, statementId, apiKey, voteType, convoId, appendLog])
 
   useEffect(() => {
     const debug = false;
@@ -176,6 +179,27 @@ export default function App() {
     };
   }, [isListening, apiKey, voteType, convoId, appendLog]);
 
+  const sendActiveStatementMessage = (statementId) => {
+    setStatementId(statementId);
+    sendJsonMessage({ type: "activeStatement", statementId: statementId || '' });
+  };
+
+  const handleStatementIdOnChange = useCallback(sendActiveStatementMessage, [sendActiveStatementMessage]);
+
+  useEffect(() => {
+    switch (lastJsonMessage.type) {
+      case "activeStatement":
+        if (lastJsonMessage.statementId !== statementId) {
+          console.log(lastJsonMessage);
+          console.log(statementId);
+          setStatementId(lastJsonMessage.statementId);
+        }
+        break;
+      default:
+        break;
+    }
+  }, [lastJsonMessage]);
+
   const toggleListening = () => {
     enableNfcFirst();
     if (!validateForm()) return
@@ -186,6 +210,7 @@ export default function App() {
     <SafeAreaView style={styles.container}>
       <InputField label="API Key" disabled={isListening} value={apiKey} onValueChange={setApiKey} error={errors.apiKey} />
       <InputField label="Conversation ID" disabled={isListening} value={convoId} onValueChange={setConvoId} error={errors.convoId} />
+      <InputField label="Statement ID" value={statementId} onValueChange={handleStatementIdOnChange} />
       <TypeSelector disabled={isListening} value={voteType} onValueChange={setVoteType} />
       <ToggleListenButton onClick={toggleListening} {...{isListening}} />
       <Text>{connectionStatus}</Text>
