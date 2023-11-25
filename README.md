@@ -1,11 +1,38 @@
-# Sample Snack app
+# Polis IRL NFC voting app
 
-Open the `App.js` file to start writing some code. You can preview the changes directly on your phone or tablet by scanning the **QR code** or use the iOS or Android emulators. When you're done, click **Save** and share the link!
+## Development
 
-When you're ready to see everything that Expo provides (or if you want to use your own editor) you can **Download** your project and use it with [expo cli](https://docs.expo.dev/get-started/installation/#expo-cli)).
+```
+# You'll need two devices. We'll assume one actual device and one emulated.
+# This should list your actual device
+adb devices
 
-All projects created in Snack are publicly available, so you can easily share the link to this project via link, or embed it on a web page with the `<>` button.
+# start any emulators you need
+emulator -avd <existing emulator ID>
 
-If you're having problems, you can tweet to us [@expo](https://twitter.com/expo) or ask in our [forums](https://forums.expo.dev/c/expo-dev-tools/61) or [Discord](https://chat.expo.dev/).
+# this should now list real and emulated, with device IDs
+adb devices
 
-Snack is Open Source. You can find the code on the [GitHub repo](https://github.com/expo/snack).
+# Set up reverse port forwarding from device to workstation.
+# This allows devices to access you local websocket dev server.
+adb -s <real device id> reverse tcp:1999 tcp:1999
+adb -s <emu device id> reverse tcp:1999 tcp:1999
+
+# Open the webserver in one terminal.
+npm run start-server
+
+# In another terminal, start the react-native expo dev server.
+npm start
+# The hit "a" to build android (for both devices)
+# You should see each device load the app it has installed
+
+# Each app should say that the websocket connection status is "Open" above to logs.
+# Updating the Statement ID should propagate between devices.
+
+# Add an API key of format `pkey_*`.
+# Add a convo ID that starts with a digit, then any characters.
+
+# Start listening for NFC scans.
+
+# Flash any NFC-enabled tag (some credit cards word, or door fobs) to test.
+```
