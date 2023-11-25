@@ -64,7 +64,7 @@ npm run android:prod
 
       ![](https://imgur.com/0oCW1mg.png)
       </details>
-1. Install production app on 3 phones
+1. Install [preview app][] on 3 phones
 1. Enter the conversation ID in each of the 3 apps.
     - <details>
       <summary>Click for screenshot</summary>
@@ -97,3 +97,6 @@ npm run android:prod
       ![](https://imgur.com/iSejvgP.png)
       </details>
 1. If there Polis conversation page is up on a screen, it will update in real-time.
+
+<!-- Links -->
+   [preview app]: https://expo.dev/accounts/patcon/projects/snack-81f04247-61d9-4cc9-b0e4-67c1a4f261e0/builds/90005652-095d-4570-af57-77391737e5e9
