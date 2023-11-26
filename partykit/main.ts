@@ -1,4 +1,4 @@
-import type { Party, PartyKitServer, Connection } from "partykit/server";
+import type { Response, Party, PartyKitServer, Connection } from "partykit/server";
 
 type ActiveStatementMessage = {
   type: "activeStatement";
@@ -11,7 +11,16 @@ type ConnectionsMessage = {
 };
 
 export default class Jukebox implements PartyKitServer {
+  activeStatementId: string | null = null;
   constructor(public party: Party) {}
+
+  async onRequest(request: Party.Request) {
+    if (request.method === "GET") {
+      return new Response(JSON.stringify({ activeStatementId: this.activeStatementId }));
+    }
+
+    return new Response("Method not allowed", { status: 405 });
+  }
 
   onConnect(connection: Connection) {
     this.broadcastConnections();
@@ -26,6 +35,7 @@ export default class Jukebox implements PartyKitServer {
     console.log(msg);
     switch (msg.type) {
       case "activeStatement": {
+        this.activeStatementId = msg.statementId;
         this.party.broadcast(message as string, [connection.id]);
         break;
       }
