@@ -2,7 +2,7 @@ import * as React from 'react';
 import { View } from 'react-native';
 import { HelperText, TextInput } from 'react-native-paper';
 
-const Component = ({ label, disabled, value, onValueChange, error }) => {
+const Component = ({ label, disabled, value, onValueChange, error, keyboardType = "default" }) => {
   return (
     <View>
       <TextInput
@@ -13,6 +13,7 @@ const Component = ({ label, disabled, value, onValueChange, error }) => {
         onChangeText={onValueChange}
         autoCapitalize="none"
         autoCorrect={false}
+        keyboardType={keyboardType}
       />
       <HelperText type="error" visible={error} style={{minHeight: 28, marginBottom: -24}}>{error}</HelperText>
     </View>

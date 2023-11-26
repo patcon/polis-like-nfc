@@ -185,8 +185,11 @@ export default function App() {
   }, [isListening, apiKey, voteType, convoId, appendLog]);
 
   const sendActiveStatementMessage = (statementId) => {
-    setStatementId(statementId);
-    sendJsonMessage({ type: "activeStatement", statementId: statementId || '' });
+    const filteredStatementId = statementId.replace(/[^0-9]/g, '')
+    setStatementId(filteredStatementId);
+    if (filteredStatementId !== statementId) return;
+
+    sendJsonMessage({ type: "activeStatement", statementId: filteredStatementId || '' });
   };
 
   const handleStatementIdOnChange = useCallback(sendActiveStatementMessage, [sendActiveStatementMessage]);
@@ -214,7 +217,7 @@ export default function App() {
   return (
     <SafeAreaView style={styles.container}>
       <InputField label="Conversation ID" disabled={isListening} value={convoId} onValueChange={setConvoId} error={errors.convoId} />
-      <InputField label="Statement ID" value={statementId} onValueChange={handleStatementIdOnChange} />
+      <InputField label="Statement ID" value={statementId} onValueChange={handleStatementIdOnChange} keyboardType="numeric" />
       <TypeSelector disabled={isListening} value={voteType} onValueChange={setVoteType} />
       <ToggleListenButton onClick={toggleListening} {...{isListening}} />
       <Text>Websocket Connection: {connectionStatus}</Text>
