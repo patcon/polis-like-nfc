@@ -9,3 +9,4 @@
   - https://pol.is/2demo?xid=foobar
 - [ ] determine if apiKey still needed, or remove
 - [ ] allow app to work on web so can easily update active statement
+- [ ] Add typescript support to react-native app.
