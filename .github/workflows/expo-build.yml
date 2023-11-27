@@ -6,6 +6,9 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
+      - name: 🏗 Setup repo
+        uses: actions/checkout@v3
+
       - name: should it be skipped?
         env:
           COMMIT_FILTER: "skip-build"
@@ -23,8 +26,6 @@ jobs:
             echo "the last commit log \"$last_commit_log\" contains \"$COMMIT_FILTER\", stopping"
             exit 78
           fi
-      - name: 🏗 Setup repo
-        uses: actions/checkout@v3
 
       - name: 🏗 Setup Node
         uses: actions/setup-node@v3
