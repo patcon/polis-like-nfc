@@ -5,7 +5,7 @@
   - [x] add UI for updating active statement
   - [x] make websocket url vary based on dev/prod
   - [x] confirm that changing statementId during scan changes API request
-- [ ] extract userId from url data when available, and NFC tag id otherwise
+- [x] extract userId from url data when available, and NFC tag id otherwise
   - https://pol.is/2demo?xid=foobar
 - [ ] determine if apiKey still needed, or remove
 - [ ] allow app to work on web so can easily update active statement
