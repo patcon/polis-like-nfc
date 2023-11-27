@@ -27,7 +27,11 @@ const prodSocketUrl = `wss://${partykitData.name}.${partkitUsername}.partykit.de
 const partykitParty = 'main';
 const WEBSOCKET_URL = `${ __DEV__ ? devSocketUrl : prodSocketUrl }/party/${partykitParty}`
 
-import NfcManager, { NfcTech, NfcEvents } from 'react-native-nfc-manager';
+import NfcManager, { NfcTech, NfcEvents, Ndef } from 'react-native-nfc-manager';
+
+// Because otherwise react-native can't parse query params from urls.
+import { setupURLPolyfill } from 'react-native-url-polyfill';
+setupURLPolyfill();
 
 //NfcManager.start();
 
@@ -148,7 +152,11 @@ export default function App() {
   // }, [])
   useEffect(() => {
     NfcManager.setEventListener(NfcEvents.DiscoverTag, (tag) => {
-        const userId = tag.id;
+        const ndefRecord = tag.ndefMessage[0];
+        const urlData = new URL(Ndef.uri.decodePayload(ndefRecord.payload));
+        const xid = urlData.searchParams.get('xid');
+        // Backup if not using a NDef tag with a URI.
+        const userId = xid ? xid : tag.id;
         console.warn(`Registered vote by user ${userId} for ${voteType}`);
         appendLog(`Registered vote by user ${userId} for ${voteType}`);
         voteActiveStatement({ apiKey, statementId, voteType, convoId, userId });
