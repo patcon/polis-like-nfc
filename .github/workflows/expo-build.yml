@@ -8,7 +8,7 @@ jobs:
     steps:
       - name: should it be skipped?
         env:
-          COMMIT_FILTER: "skip build"
+          COMMIT_FILTER: "skip-build"
         run: |
           # Get last commit message
           readonly local last_commit_log=$(git log -1 --pretty=format:"%s")
