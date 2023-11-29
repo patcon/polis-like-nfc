@@ -43,6 +43,10 @@ npm start
 npm run android:prod
 ```
 
+## Roadmap
+
+See [`TODO.md`][/TODO.md] for task list of past/upcoming features.
+
 ## Usage
 
 1. Gather NFC tags (key fobs or some credit cards work fine) and 3 phones.
