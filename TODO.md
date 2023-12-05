@@ -12,6 +12,8 @@
 - [ ] allow app to work on web so can easily update active statement
 - [ ] Add typescript support to react-native app.
 - [ ] Add download for importig profiles into NFC Tools Pro.
+  - bytes = chars + 5
   - https://gist.github.com/patcon/23059e0794fb6d4461e4678259361244
 - [ ] Add ability to proxy profile image requests to random person API.
 - [ ] Add ability to replace profile images with uploads.
+- [ ] add debug checkbox to choose endpoint
