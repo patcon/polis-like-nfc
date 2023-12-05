@@ -7,13 +7,15 @@
   - [x] confirm that changing statementId during scan changes API request
 - [x] extract userId from url data when available, and NFC tag id otherwise
   - https://pol.is/2demo?xid=foobar
-- [ ] determine if apiKey still needed, or remove
+- [ ] add debug checkbox to choose endpoint
+- [ ] keep device awake when scanning
+  - https://docs.expo.dev/versions/latest/sdk/keep-awake/
 - [ ] create simple web UI to update active statement (not react-native?)
-- [ ] allow app to work on web so can easily update active statement
-- [ ] Add typescript support to react-native app.
 - [ ] Add download for importig profiles into NFC Tools Pro.
   - bytes = chars + 5
   - https://gist.github.com/patcon/23059e0794fb6d4461e4678259361244
+- [ ] Add typescript support to react-native app.
 - [ ] Add ability to proxy profile image requests to random person API.
 - [ ] Add ability to replace profile images with uploads.
-- [ ] add debug checkbox to choose endpoint
+- [ ] allow app to work on web so can easily update active statement
+- [ ] determine if apiKey still needed, or remove
